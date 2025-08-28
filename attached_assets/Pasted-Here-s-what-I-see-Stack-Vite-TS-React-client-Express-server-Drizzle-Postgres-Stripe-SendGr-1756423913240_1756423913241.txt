@@ -1,0 +1,73 @@
+Here’s what I see:
+
+Stack: Vite + TS/React client, Express server, Drizzle/Postgres, Stripe + SendGrid.
+
+AI: server/ai.ts uses the OpenAI Node SDK with chat.completions. The model string is hard-coded to "gpt-5" in five places. It also runs on patient forms, insurance verification, appointment suggestions—i.e., likely PHI endpoints.
+
+What to do:
+
+1) Decide PHI policy now
+
+If you will ever send PHI to the model: run in a HIPAA-eligible environment with a signed BAA and lock the code so external calls are blocked unless HIPAA_MODE=true. Easiest paths: Azure OpenAI or AWS Bedrock (Claude).
+
+If you’ll fully de-identify before calls: you can use standard OpenAI, but keep de-identification on by default.
+
+2) Fix the model wiring (your code is brittle)
+
+Don’t hard-code "gpt-5". Make provider + model env-driven and add a PHI guard + redaction pass.
+
+I built you a drop-in replacement:
+
+server/ai.ts (provider-agnostic, PHI-aware, env-driven)
+Download server/ai.ts
+
+.env.example for this app
+Download .env.example.datasleuth
+
+What it gives you:
+
+AI_PROVIDER=openai|anthropic and AI_MODEL=...
+
+HIPAA_MODE=true|false — refuses external calls if PHI is likely and HIPAA mode isn’t on
+
+DEIDENTIFY_BEFORE_CALL=true — simple scrubber (placeholder; swap in a proper PHI redactor)
+
+Compatible method names with your routes: analyzePatientForm, verifyInsurance, suggestAppointmentScheduling, draftMessage, chatWithContext.
+
+How to apply (fast):
+
+Replace your current DataSleuth/server/ai.ts with the downloaded server_ai.ts (rename to ai.ts).
+
+Add env vars:
+
+If PHI:
+
+HIPAA_MODE=true
+
+For Azure OpenAI: set AI_PROVIDER=openai, AI_MODEL=gpt-4o-mini (or your approved model), and use Azure’s OpenAI endpoint/key in the SDK config (minor tweak—ask me if you want me to patch it for the Azure endpoint form).
+
+For Bedrock/Anthropic: set AI_PROVIDER=anthropic, AI_MODEL=claude-3-5-sonnet-20240620 and add the Anthropic client (I left a stub; I can finalize it if you pick Bedrock).
+
+If de-identified only:
+
+HIPAA_MODE=false, keep DEIDENTIFY_BEFORE_CALL=true, set AI_PROVIDER=openai, AI_MODEL=gpt-4o-mini (default, cheap/fast).
+
+Remove the "gpt-5" mentions elsewhere (you only had them in server/ai.ts).
+
+Keep logs PHI-free. Your server currently intercepts res.json to log; ensure it hashes IDs or disable logging on PHI routes.
+
+3) Which API/model to pick (my recommendation)
+
+Single-operator, fast shipping, minimal complexity (de-identified prompts):
+OpenAI, gpt-4o-mini as default, auto-escalate specific tough calls to a reasoning model later if needed.
+
+PHI in scope, need HIPAA path:
+Azure OpenAI (closest to your current SDK surface) or AWS Bedrock + Claude (BAA; strong reasoning). Pick the one that matches your cloud.
+
+4) Risk controls to add next
+
+Real PHI redaction (names, addresses, MRNs, DOBs, etc.) with a tested library or your own deterministic rules.
+
+Prompt journaling without PHI (store template + hash of content, not raw patient text).
+
+Output validation (JSON schema) — you already do this in spirit; the new ai.ts keeps it strict.
