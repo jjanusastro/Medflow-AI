@@ -37,7 +37,7 @@ export class AIService {
       Form data: ${JSON.stringify(formData)}`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5", // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
+        model: "gpt-4o"
         messages: [
           {
             role: "system",
@@ -82,7 +82,7 @@ export class AIService {
       Respond with JSON: { "isValid": boolean, "coverage": string[], "copay": number, "deductible": number, "notes": string }`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5", // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
+        model: "gpt-4o"
         messages: [
           {
             role: "system",
@@ -127,7 +127,7 @@ export class AIService {
       Keep it warm, professional, and under 200 words.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5", // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
+        model: "gpt-4o"
         messages: [
           {
             role: "system",
@@ -156,7 +156,7 @@ export class AIService {
       Respond with JSON: { "suggestedTime": string, "duration": number, "type": string, "priority": "low"|"medium"|"high", "reason": string }`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5", // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
+        model: "gpt-4o"
         messages: [
           {
             role: "system",
@@ -194,7 +194,7 @@ export class AIService {
   async chatWithAssistant(prompt: string, context: any): Promise<string> {
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-5", // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
+        model: "gpt-4o"
         messages: [
           {
             role: "system",
