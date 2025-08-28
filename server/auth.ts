@@ -88,6 +88,23 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: "Username already taken" });
       }
 
+      // Create practice if this is the first user, or use provided practiceId
+      let finalPracticeId = practiceId;
+      let userRole = "staff";
+      
+      if (!practiceId) {
+        // Create a new practice for first-time users
+        const practice = await storage.createPractice({
+          name: `${firstName} ${lastName}'s Practice`,
+          email: email,
+          specialty: "General Practice",
+          hipaaCompliant: true,
+          settings: {}
+        });
+        finalPracticeId = practice.id;
+        userRole = "admin"; // First user becomes admin
+      }
+
       // Create user
       const user = await storage.createUser({
         email,
@@ -95,8 +112,8 @@ export function setupAuth(app: Express) {
         password: await hashPassword(password),
         firstName,
         lastName,
-        practiceId,
-        role: "staff"
+        practiceId: finalPracticeId,
+        role: userRole
       });
 
       req.login(user, (err) => {
