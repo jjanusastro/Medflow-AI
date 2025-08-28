@@ -3,6 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { aiService } from "./ai";
+import { emailService } from "./email";
+import { paymentService } from "./payment";
 import { insertPatientSchema, insertAppointmentSchema, insertFormSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -261,6 +263,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(interactions);
     } catch (error) {
       res.status(500).json({ message: "Error fetching AI interactions" });
+    }
+  });
+
+  // Email routes
+  app.post("/api/email/appointment-reminder", requireAuth, async (req, res) => {
+    try {
+      const { patientEmail, patientName, appointmentDate, appointmentTime } = req.body;
+      
+      const success = await emailService.sendAppointmentReminder(
+        patientEmail,
+        patientName,
+        appointmentDate,
+        appointmentTime
+      );
+      
+      if (success) {
+        res.json({ message: "Appointment reminder sent successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to send appointment reminder" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Error sending appointment reminder" });
+    }
+  });
+
+  app.post("/api/email/welcome", requireAuth, async (req, res) => {
+    try {
+      const { patientEmail, patientName } = req.body;
+      
+      const success = await emailService.sendWelcomeEmail(patientEmail, patientName);
+      
+      if (success) {
+        res.json({ message: "Welcome email sent successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to send welcome email" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Error sending welcome email" });
+    }
+  });
+
+  // Payment routes (Mock/Temporary)
+  app.post("/api/payment/create-intent", requireAuth, async (req, res) => {
+    try {
+      const { amount, currency = "usd" } = req.body;
+      
+      const paymentIntent = await paymentService.createPaymentIntent(amount, currency);
+      
+      res.json({
+        clientSecret: paymentIntent.clientSecret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error creating payment intent" });
+    }
+  });
+
+  app.post("/api/payment/create-subscription", requireAuth, async (req, res) => {
+    try {
+      const { email, name, priceId } = req.body;
+      
+      // Create mock customer
+      const customer = await paymentService.createCustomer(email, name);
+      
+      // Create mock subscription
+      const subscription = await paymentService.createSubscription(customer.id, priceId);
+      
+      res.json({
+        subscriptionId: subscription.id,
+        customerId: customer.id,
+        status: subscription.status
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error creating subscription" });
     }
   });
 
