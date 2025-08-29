@@ -1,0 +1,520 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedFlow AI - Practice Management Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                },
+                fontFamily: {
+                    sans: ["Inter", "system-ui", "sans-serif"],
+                }
+            },
+        }
+    };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --background: hsl(210 40% 98%);
+            --foreground: hsl(222.2 84% 4.9%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222.2 84% 4.9%);
+            --primary: hsl(217 91% 60%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(187 82% 38%);
+            --secondary-foreground: hsl(210 40% 98%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215.4 16.3% 46.9%);
+            --accent: hsl(20 84% 49%);
+            --accent-foreground: hsl(210 40% 98%);
+            --border: hsl(214.3 31.8% 91.4%);
+            --input: hsl(214.3 31.8% 91.4%);
+            --ring: hsl(217 91% 60%);
+            --radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground font-sans">
+    <!-- @COMPONENT: Header -->
+    <header class="bg-card border-b border-border">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fas fa-heartbeat text-primary-foreground text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold text-foreground">MedFlow AI</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
+                    <i class="fas fa-bell text-lg"></i>
+                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs rounded-full flex items-center justify-center" data-mock="true">3</span>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-foreground" data-bind="user.name" data-mock="true">Dr. Sarah Chen</p>
+                        <p class="text-xs text-muted-foreground" data-mock="true">Family Medicine</p>
+                    </div>
+                    <div class="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-muted-foreground"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <div class="flex h-[calc(100vh-73px)]">
+        <!-- @COMPONENT: Sidebar -->
+        <aside class="w-64 bg-card border-r border-border">
+            <nav class="p-4 space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 bg-primary text-primary-foreground rounded-lg">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-calendar-alt w-5"></i>
+                    <span>Appointments</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-users w-5"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-robot w-5"></i>
+                    <span>AI Assistant</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-shield-alt w-5"></i>
+                    <span>Insurance</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-file-medical w-5"></i>
+                    <span>Forms</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-chart-bar w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+                    <i class="fas fa-cog w-5"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-4 left-4 right-4">
+                <div class="bg-muted rounded-lg p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-lock text-secondary text-sm"></i>
+                        <span class="text-sm font-medium text-foreground">HIPAA Compliant</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">Your data is encrypted and secure</p>
+                </div>
+            </div>
+        </aside>
+        <!-- @END_COMPONENT: Sidebar -->
+
+        <!-- @COMPONENT: MainContent -->
+        <main class="flex-1 overflow-auto">
+            <!-- @COMPONENT: DashboardHeader -->
+            <div class="p-6 bg-card border-b border-border">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-foreground">Practice Dashboard</h1>
+                        <p class="text-muted-foreground" data-mock="true">Welcome back, Dr. Chen. Here's what's happening today.</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity">
+                            <i class="fas fa-robot mr-2"></i>AI Insights
+                        </button>
+                        <button class="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity">
+                            <i class="fas fa-plus mr-2"></i>New Appointment
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-background p-6 rounded-xl border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Today's Appointments</p>
+                                <p class="text-2xl font-bold text-foreground" data-mock="true">24</p>
+                                <p class="text-xs text-secondary flex items-center mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    <span data-mock="true">8% from yesterday</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-calendar text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-background p-6 rounded-xl border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Pending Forms</p>
+                                <p class="text-2xl font-bold text-foreground" data-mock="true">12</p>
+                                <p class="text-xs text-accent flex items-center mt-1">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    <span data-mock="true">Needs attention</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-file-alt text-accent"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-background p-6 rounded-xl border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">Insurance Verified</p>
+                                <p class="text-2xl font-bold text-foreground" data-mock="true">96%</p>
+                                <p class="text-xs text-secondary flex items-center mt-1">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    <span data-mock="true">Automation active</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-secondary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-background p-6 rounded-xl border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-muted-foreground">AI Efficiency</p>
+                                <p class="text-2xl font-bold text-foreground" data-mock="true">87%</p>
+                                <p class="text-xs text-secondary flex items-center mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    <span data-mock="true">12% this month</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-purple-500 bg-opacity-10 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-brain text-purple-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: DashboardHeader -->
+
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- @COMPONENT: UpcomingAppointments -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-card rounded-xl border border-border p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-semibold text-foreground">Today's Schedule</h2>
+                                <button class="text-primary hover:text-primary/80 text-sm font-medium">View All</button>
+                            </div>
+                            
+                            <!-- @MAP: appointments.map(appointment => ( -->
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-4 p-4 bg-background rounded-lg border border-border" data-mock="true">
+                                    <div class="w-2 h-12 bg-primary rounded-full"></div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="font-medium text-foreground">Sarah Johnson</h3>
+                                            <span class="text-sm text-muted-foreground">9:00 AM</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground">Annual Checkup • Room 2</p>
+                                        <div class="flex items-center space-x-2 mt-1">
+                                            <span class="px-2 py-1 bg-secondary bg-opacity-10 text-secondary text-xs rounded-full">Insurance Verified</span>
+                                            <span class="px-2 py-1 bg-primary bg-opacity-10 text-primary text-xs rounded-full">Forms Complete</span>
+                                        </div>
+                                    </div>
+                                    <button class="text-muted-foreground hover:text-foreground">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4 p-4 bg-background rounded-lg border border-border" data-mock="true">
+                                    <div class="w-2 h-12 bg-accent rounded-full"></div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="font-medium text-foreground">Michael Davis</h3>
+                                            <span class="text-sm text-muted-foreground">9:30 AM</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground">Follow-up Visit • Room 1</p>
+                                        <div class="flex items-center space-x-2 mt-1">
+                                            <span class="px-2 py-1 bg-accent bg-opacity-10 text-accent text-xs rounded-full">Pending Forms</span>
+                                            <span class="px-2 py-1 bg-secondary bg-opacity-10 text-secondary text-xs rounded-full">Insurance OK</span>
+                                        </div>
+                                    </div>
+                                    <button class="text-muted-foreground hover:text-foreground">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4 p-4 bg-background rounded-lg border border-border" data-mock="true">
+                                    <div class="w-2 h-12 bg-secondary rounded-full"></div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="font-medium text-foreground">Emily Wilson</h3>
+                                            <span class="text-sm text-muted-foreground">10:15 AM</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground">New Patient Consultation • Room 3</p>
+                                        <div class="flex items-center space-x-2 mt-1">
+                                            <span class="px-2 py-1 bg-primary bg-opacity-10 text-primary text-xs rounded-full">All Ready</span>
+                                            <span class="px-2 py-1 bg-green-500 bg-opacity-10 text-green-600 text-xs rounded-full">AI Pre-screened</span>
+                                        </div>
+                                    </div>
+                                    <button class="text-muted-foreground hover:text-foreground">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: UpcomingAppointments -->
+
+                    <!-- @COMPONENT: AIChatbot -->
+                    <div class="space-y-6">
+                        <div class="bg-card rounded-xl border border-border p-6">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-8 h-8 bg-purple-500 bg-opacity-10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-robot text-purple-500"></i>
+                                </div>
+                                <h2 class="text-lg font-semibold text-foreground">AI Assistant</h2>
+                            </div>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="bg-muted p-3 rounded-lg" data-mock="true">
+                                    <p class="text-sm text-foreground">Today's schedule looks busy! I've automatically verified insurance for 3 new patients and flagged 2 incomplete forms.</p>
+                                </div>
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-lg ml-4" data-mock="true">
+                                    <p class="text-sm text-primary">What can I help you with today?</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Ask AI assistant..." class="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                <button class="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- @COMPONENT: QuickActions -->
+                        <div class="bg-card rounded-xl border border-border p-6">
+                            <h2 class="text-lg font-semibold text-foreground mb-4">Quick Actions</h2>
+                            <div class="space-y-3">
+                                <button class="w-full flex items-center space-x-3 p-3 bg-background hover:bg-muted rounded-lg transition-colors text-left">
+                                    <i class="fas fa-user-plus text-primary"></i>
+                                    <span class="text-sm font-medium text-foreground">Add New Patient</span>
+                                </button>
+                                <button class="w-full flex items-center space-x-3 p-3 bg-background hover:bg-muted rounded-lg transition-colors text-left">
+                                    <i class="fas fa-calendar-plus text-secondary"></i>
+                                    <span class="text-sm font-medium text-foreground">Schedule Appointment</span>
+                                </button>
+                                <button class="w-full flex items-center space-x-3 p-3 bg-background hover:bg-muted rounded-lg transition-colors text-left">
+                                    <i class="fas fa-file-medical text-accent"></i>
+                                    <span class="text-sm font-medium text-foreground">Generate Report</span>
+                                </button>
+                                <button class="w-full flex items-center space-x-3 p-3 bg-background hover:bg-muted rounded-lg transition-colors text-left">
+                                    <i class="fas fa-envelope text-purple-500"></i>
+                                    <span class="text-sm font-medium text-foreground">Send Follow-up</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: QuickActions -->
+                    </div>
+                    <!-- @END_COMPONENT: AIChatbot -->
+                </div>
+
+                <!-- @COMPONENT: AnalyticsDashboard -->
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-card rounded-xl border border-border p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-semibold text-foreground">Patient Flow Analytics</h2>
+                            <select class="px-3 py-1 bg-background border border-border rounded-lg text-sm">
+                                <option data-mock="true">Last 7 days</option>
+                                <option data-mock="true">Last 30 days</option>
+                                <option data-mock="true">Last 3 months</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Mock Chart Area -->
+                        <div class="h-48 bg-muted rounded-lg flex items-center justify-center mb-4">
+                            <div class="text-center">
+                                <i class="fas fa-chart-area text-4xl text-muted-foreground mb-2"></i>
+                                <p class="text-sm text-muted-foreground" data-mock="true">Patient flow visualization would appear here</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-foreground" data-mock="true">142</p>
+                                <p class="text-xs text-muted-foreground">Total Patients</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-secondary" data-mock="true">89%</p>
+                                <p class="text-xs text-muted-foreground">Show Rate</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-primary" data-mock="true">4.2</p>
+                                <p class="text-xs text-muted-foreground">Avg Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-card rounded-xl border border-border p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-semibold text-foreground">Practice Performance</h2>
+                            <button class="text-primary hover:text-primary/80 text-sm font-medium">View Details</button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-background rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-clock text-primary text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-foreground">Average Wait Time</p>
+                                        <p class="text-sm text-muted-foreground" data-mock="true">Reduced by 23% this month</p>
+                                    </div>
+                                </div>
+                                <span class="text-lg font-bold text-foreground" data-mock="true">8 min</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-background rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-secondary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-users text-secondary text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-foreground">Patient Satisfaction</p>
+                                        <p class="text-sm text-muted-foreground" data-mock="true">Based on 127 reviews</p>
+                                    </div>
+                                </div>
+                                <span class="text-lg font-bold text-foreground" data-mock="true">4.8/5</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-background rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-accent bg-opacity-10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-dollar-sign text-accent text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-foreground">Revenue per Visit</p>
+                                        <p class="text-sm text-muted-foreground" data-mock="true">+15% from last quarter</p>
+                                    </div>
+                                </div>
+                                <span class="text-lg font-bold text-foreground" data-mock="true">$127</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: AnalyticsDashboard -->
+
+                <!-- @COMPONENT: RecentActivity -->
+                <div class="mt-8">
+                    <div class="bg-card rounded-xl border border-border p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-semibold text-foreground">Recent Activity</h2>
+                            <button class="text-primary hover:text-primary/80 text-sm font-medium">View All</button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- @MAP: activities.map(activity => ( -->
+                            <div class="flex items-start space-x-4" data-mock="true">
+                                <div class="w-8 h-8 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mt-1">
+                                    <i class="fas fa-robot text-primary text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-foreground"><strong>AI Assistant</strong> automatically verified insurance for 3 new patients</p>
+                                    <p class="text-xs text-muted-foreground">2 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4" data-mock="true">
+                                <div class="w-8 h-8 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mt-1">
+                                    <i class="fas fa-calendar text-secondary text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-foreground"><strong>System</strong> sent appointment reminders to 12 patients</p>
+                                    <p class="text-xs text-muted-foreground">3 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4" data-mock="true">
+                                <div class="w-8 h-8 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mt-1">
+                                    <i class="fas fa-file-alt text-accent text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-foreground"><strong>Dr. Chen</strong> completed intake forms for new patient Emily Wilson</p>
+                                    <p class="text-xs text-muted-foreground">4 hours ago</p>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: RecentActivity -->
+            </div>
+        </main>
+        <!-- @END_COMPONENT: MainContent -->
+    </div>
+
+    <script>
+        // TODO: Implement appointment scheduling logic
+        // TODO: Implement AI assistant chat functionality
+        // TODO: Implement real-time data updates
+        // TODO: Implement form automation workflows
+        // TODO: Implement insurance verification API calls
+        
+        (function() {
+            // Mock notification system
+            document.addEventListener('DOMContentLoaded', function() {
+                // Simulate real-time updates
+                setTimeout(function() {
+                    console.log('Dashboard initialized with AI-powered insights');
+                }, 1000);
+            });
+        })();
+    </script>
+</body>
+</html>
